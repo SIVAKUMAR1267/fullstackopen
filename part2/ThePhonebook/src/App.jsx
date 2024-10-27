@@ -8,13 +8,17 @@ import { useState } from 'react'
   const [newName, setNewName] = useState('')
   const addname = (event) => {
     event.preventDefault()
-    const personsObject = {
+  const personsObject = {
       id: String(persons.length + 1),
       name: newName
-    }
-    setPersons(persons.concat(personsObject))
-    setNewName('')
-    }
+  }
+const nameexists = persons.some((persons)=>persons.name === newName)
+    if (nameexists) {
+      alert(newName + ' is already added to phonebook')}
+  else{
+  setPersons(persons.concat(personsObject))
+  setNewName('')
+  }}
 
 
   const handleNoteChange = (event) => {
