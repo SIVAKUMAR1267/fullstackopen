@@ -26,7 +26,7 @@ const numberexists = persons.some((persons)=>persons.number === newNumber)
     else{
     setPersons(persons.concat(personsObject))
     setNewName('')
-    setNewName('')
+    setNewNumber('')
     }}
 
   const handleChangefilter = (event) => {
