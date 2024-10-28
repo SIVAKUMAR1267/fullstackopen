@@ -1,15 +1,11 @@
 import { useState } from 'react'
 
-  const App = () => {
-    const [persons, setPersons] = useState([
-      { name: 'Arto Hellas', number: '040-123456', id: 1 },
-      { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-      { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-      { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-    ]) 
+  const App = (props) => {
+    const [persons, setPersons] = useState(props.persons) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newfilter,setNewfilter]=useState('')
+  const [filteredname,setfilteredname]=useState(props.persons)
   const addname = (event) => {
     event.preventDefault()
   const personsObject = {
@@ -31,6 +27,9 @@ const numberexists = persons.some((persons)=>persons.number === newNumber)
 
   const handleChangefilter = (event) => {
       setNewfilter(event.target.value)
+  const filteredlist =persons.filter((persons)=>
+  persons.name.includes(event.target.value))
+  setfilteredname(filteredlist)
   }
   const handleChangename = (event) => {
         setNewName(event.target.value)
@@ -60,7 +59,7 @@ const numberexists = persons.some((persons)=>persons.number === newNumber)
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(persons => 
+        {filteredname.map(persons => 
           <li key={persons.id}>{persons.name}  {persons.number}
           </li>
         )}
