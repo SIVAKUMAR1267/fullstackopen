@@ -21,6 +21,7 @@ const numberexists = persons.some((persons)=>persons.number === newNumber)
       alert(newNumber + ' is already added to phonebook')}
     else{
     setPersons(persons.concat(personsObject))
+    setfilteredname(filteredname.concat(personsObject))
     setNewName('')
     setNewNumber('')
     }}
