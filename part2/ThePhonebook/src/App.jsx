@@ -1,8 +1,9 @@
 import { useState,useEffect } from 'react'
-import axios from 'axios'
+import names from './services/names'
 import Personalform from './components/Personalforms'
 import Filter from './components/Filter'
 import Pesonals from './components/Personals'
+import axios from 'axios'
 const App = (props) => {
     const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
@@ -11,11 +12,10 @@ const App = (props) => {
   const [filteredname,setfilteredname]=useState([])
   useEffect(() => {
     
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-        setfilteredname(response.data)
+   names.getAll()
+      .then(initialpersons => {
+        setPersons(initialpersons)
+        setfilteredname(initialpersons)
       })
   }, [])
   const addname = (event) => {
@@ -27,16 +27,24 @@ const App = (props) => {
   }
 const nameexists = persons.some((persons)=>persons.name === newName)
 const numberexists = persons.some((persons)=>persons.number === newNumber)
-    if (nameexists) {
-      alert(newName + ' is already added to phonebook')}
-    if(numberexists){
-      alert(newNumber + ' is already added to phonebook')}
+    if (nameexists) {return(
+      alert(newName + ' is already added to phonebook'))}
+    if(numberexists){return(
+      alert(newNumber + ' is already added to phonebook'))}
     else{
     setPersons(persons.concat(personsObject))
     setfilteredname(filteredname.concat(personsObject))
     setNewName('')
     setNewNumber('')
-    }}
+    }
+    names.create(personsObject)
+    .then(initialpersons => {
+      setPersons(persons.concat(initialpersons))
+      setNewName('')
+      setNewNumber('')
+    })
+  
+  }
 
   const handleChangefilter = (event) => {
       setNewfilter(event.target.value)
