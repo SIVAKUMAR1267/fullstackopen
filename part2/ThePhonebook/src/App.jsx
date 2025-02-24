@@ -3,7 +3,7 @@ import names from './services/names'
 import Personalform from './components/Personalforms'
 import Filter from './components/Filter'
 import Pesonals from './components/Personals'
-import axios from 'axios'
+
 const App = (props) => {
     const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
@@ -45,6 +45,15 @@ const numberexists = persons.some((persons)=>persons.number === newNumber)
     })
   
   }
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this person?')) {
+      names.delete(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+          setfilteredname(filteredname.filter(person => person.id !== id))
+        })
+    }
+  }
 
   const handleChangefilter = (event) => {
       setNewfilter(event.target.value)
@@ -64,7 +73,7 @@ const numberexists = persons.some((persons)=>persons.number === newNumber)
      <h2> add a new</h2>
      <Personalform handleChangenumber={handleChangenumber} handleChangename={handleChangename} addname={addname}
       newName={newName} newNumber={newNumber} />
-     <Pesonals filteredname={filteredname}/>
+     <Pesonals filteredname={filteredname} handleDelete={handleDelete}/>
     </div>
    
   )
