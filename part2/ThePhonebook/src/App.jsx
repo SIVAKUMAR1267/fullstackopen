@@ -52,7 +52,13 @@ const numberexists = persons.some((persons)=>persons.number === newNumber)
           setPersons(persons.filter(person => person.id !== id))
           setfilteredname(filteredname.filter(person => person.id !== id))
         })
+        .catch((error)=>{
+          console.log(error)
+          alert('The person has already been deleted')
+        })
+      
     }
+    
   }
 
   const handleChangefilter = (event) => {
