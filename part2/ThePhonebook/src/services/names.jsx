@@ -23,4 +23,4 @@ const update = (id, newObject) => {
 }
 
 
-export default { getAll, create,delete:deletePerson }
+export default { getAll, create, update ,delete:deletePerson }
