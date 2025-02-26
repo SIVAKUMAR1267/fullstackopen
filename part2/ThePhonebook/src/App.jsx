@@ -3,6 +3,7 @@ import names from './services/names'
 import Personalform from './components/Personalforms'
 import Filter from './components/Filter'
 import Personals from './components/Personals'
+import Notification from './components/message'
 
 const App = (props) => {
   const [persons, setPersons] = useState([]) 
@@ -10,7 +11,7 @@ const App = (props) => {
   const [newNumber, setNewNumber] = useState('')
   const [newfilter, setNewfilter] = useState('')
   const [filteredname, setfilteredname] = useState([])
-
+  const [Message, setMessage] = useState(null)
   useEffect(() => {
     names.getAll()
       .then(initialpersons => {
@@ -26,6 +27,7 @@ const App = (props) => {
       number: newNumber
     }
     const existingPerson = persons.find(person => person.name === newName)
+    const existingnumber = persons.find(person => person.number === newNumber )
     if (existingPerson) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         names.update(existingPerson.id, personsObject)
@@ -34,18 +36,22 @@ const App = (props) => {
             setfilteredname(filteredname.map(person => person.id !== existingPerson.id ? person : updatedPerson))
             setNewName('')
             setNewNumber('')
+            setMessage(`'${newName}' is added the phonebook`)
           })
       }
-    } else {
+    }
+    else {
       names.create(personsObject)
         .then(newPerson => {
           setPersons(persons.concat(newPerson))
           setfilteredname(filteredname.concat(newPerson))
           setNewName('')
           setNewNumber('')
+          setMessage(`'${newName}' is added the phonebook`)
         })
     }
   }
+
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this person?')) {
@@ -54,6 +60,10 @@ const App = (props) => {
           setPersons(persons.filter(person => person.id !== id))
           setfilteredname(filteredname.filter(person => person.id !== id))
         })
+        .catch((error)=>{
+          alert('the person is already deleted')
+        })
+      
     }
   }
 
@@ -75,6 +85,7 @@ const App = (props) => {
   return (
     <div>
       <Filter newfilter={newfilter} handleChangefilter={handleChangefilter} />
+      <Notification message={Message} />
       <h2> add a new</h2>
       <Personalform handleChangenumber={handleChangenumber} handleChangename={handleChangename} addname={addname}
         newName={newName} newNumber={newNumber} />
