@@ -4,6 +4,7 @@ import Personalform from './components/Personalforms'
 import Filter from './components/Filter'
 import Personals from './components/Personals'
 import Notification from './components/message'
+import Errormessage from './components/errormessage'
 
 const App = (props) => {
   const [persons, setPersons] = useState([]) 
@@ -12,6 +13,8 @@ const App = (props) => {
   const [newfilter, setNewfilter] = useState('')
   const [filteredname, setfilteredname] = useState([])
   const [Message, setMessage] = useState(null)
+  const [errormessage, seterrormessage] = useState(null)
+
   useEffect(() => {
     names.getAll()
       .then(initialpersons => {
@@ -48,6 +51,7 @@ const App = (props) => {
           setNewName('')
           setNewNumber('')
           setMessage(`'${newName}' is added the phonebook`)
+          seterrormessage(null)
         })
     }
   }
@@ -59,9 +63,13 @@ const App = (props) => {
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
           setfilteredname(filteredname.filter(person => person.id !== id))
+          setMessage(null)
+          seterrormessage(`'${filteredname.find(person => person.id === id).name}' has been deleted from the phonebook`)
         })
         .catch((error)=>{
-          alert('the person is already deleted')
+        setMessage(null)
+         seterrormessage(`Information of '${filteredname.find(person => person.id === id).name}' has already been removed from the phonebook`)
+         setfilteredname(filteredname.filter(person => person.id !== id))
         })
       
     }
@@ -86,6 +94,7 @@ const App = (props) => {
     <div>
       <Filter newfilter={newfilter} handleChangefilter={handleChangefilter} />
       <Notification message={Message} />
+      <Errormessage errormessage={errormessage} />
       <h2> add a new</h2>
       <Personalform handleChangenumber={handleChangenumber} handleChangename={handleChangename} addname={addname}
         newName={newName} newNumber={newNumber} />
