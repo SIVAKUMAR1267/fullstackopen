@@ -71,7 +71,9 @@ const App = () => {
             {countries[0].languages && languagerender(countries[0].languages)}
           </div>
           )}
-           <img src={countries[0].flags.png} alt="flag" />
+        {countries.length === 1 &&(
+          <img src={countries[0].flags.png} alt="flag" />
+        )}
     </div>
   )
 }
