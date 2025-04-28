@@ -4,6 +4,7 @@ import axios from 'axios'
 const App = () => {
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState("")
+  const [weatherData, setWeatherData] = useState(null)
 
   const languagerender = (languages) => {
     if (typeof languages === "object" && languages !== null) {
@@ -25,6 +26,15 @@ const App = () => {
       setCountries([])
       return
     }
+    const fetchWeather = async () => {
+      try {
+        const weatherApiKey = import.meta.env.VITE_WEATHER_API_KEY
+        const weatherApiUrl = `https://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${filter}&aqi=no`
+        const response = await axios.get(weatherApiUrl)
+        setWeatherData(response.data)
+      } catch (error) {
+        console.error("Error fetching weather data:", error)
+      }}
     const fetchCountries = async () => {
       try {
         const url = `https://restcountries.com/v3.1/name/${filter}`
@@ -32,10 +42,11 @@ const App = () => {
         setCountries(response.data)
       }
       catch (error) {
-        console.error("Error fetching countries:", error)
+        console.error("Error fetching countries:",error)
       }
     }
     fetchCountries()
+    fetchWeather()
   },[filter])
 
   return(
@@ -75,6 +86,18 @@ const App = () => {
         {countries.length === 1 &&(
           <img src={countries[0].flags.png} alt="flag" />
         )}
+        {weatherData && countries.length === 1 && (
+          <div>
+            <h3>Weather in {countries[0].capital}</h3>
+            <p>Temperature: {weatherData.current.temp_c}°C</p>
+            <img src={weatherData.current.condition.icon} alt="weather icon" />
+            <p>Wind Speed: {weatherData.current.wind_kph} k/h</p>
+          </div>
+        )}
+        {countries.length === 0 && filter && (
+          <p>No countries found for "{filter}"</p>
+        )}
+
     </div>
   )
 }
