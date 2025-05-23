@@ -15,7 +15,7 @@ app.use(morgan(':method :url :status :res[content-length]  :response-time ms :bo
 
 
 let persons = [
-    
+   
         { 
           "id": "1",
           "name": "Arto Hellas", 
@@ -36,8 +36,7 @@ let persons = [
           "name": "Mary Poppendieck", 
           "number": "39-23-6423122"
         }
-    
-]
+  ]
 
 
 
