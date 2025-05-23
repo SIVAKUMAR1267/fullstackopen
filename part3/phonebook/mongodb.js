@@ -14,7 +14,7 @@ mongoose.connect(url)
 
 const phonebookSchema = new mongoose.Schema({
   Name: String,
-  number: String, // Use String for phone numbers
+  number: String, 
 })
 
 const Phonebook = mongoose.model('Phonebook', phonebookSchema)
@@ -29,7 +29,7 @@ if (process.argv.length === 3) {
     mongoose.connection.close()
   })
 } else if (process.argv.length === 5) {
-  // Add new entry
+
   const name = process.argv[3]
   const number = process.argv[4]
 
