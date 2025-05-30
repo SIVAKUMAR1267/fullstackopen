@@ -13,18 +13,18 @@ mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
 const phonebookSchema = new mongoose.Schema({
-  Name: String,
+  name: String,
   number: String, 
 })
 
-const Phonebook = mongoose.model('Phonebook', phonebookSchema)
+const Persons = mongoose.model('Phonebook', phonebookSchema)
 
 if (process.argv.length === 3) {
   // Show all entries
   console.log("Phonebook:")
-  Phonebook.find({}).then(result => {
-    result.forEach(phonebook => {
-      console.log(` ${phonebook.Name} ${phonebook.number}`)
+  Persons.find({}).then(result => {
+    result.forEach(Persons => {
+      console.log(` ${Persons.name} ${Persons.number}`)
     })
     mongoose.connection.close()
   })
@@ -33,7 +33,7 @@ if (process.argv.length === 3) {
   const name = process.argv[3]
   const number = process.argv[4]
 
-  const entry = new Phonebook({ Name: name, number: number })
+  const entry = new Persons({ name: name, number: number })
 
   entry.save().then(() => {
     console.log(`added ${name} ${number}`)
