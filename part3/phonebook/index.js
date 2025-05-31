@@ -19,6 +19,20 @@ const generateId = () => {
   return key
 }
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
 
  app.post('/api/persons', (request, response) => {
   const body = request.body
@@ -46,20 +60,36 @@ app.get('/info', (request, response) => {
     response.send(info)
   })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-   Persons.findById(id).then(person => {
-    if (person) {
-      Persons.deleteOne(id)
-      console.log(`Deleted person with id: ${request.params.id}`)
+app.delete('/api/persons/:id', (request, response, next) => {
+  Persons.findByIdAndDelete(request.params.id)
+    .then(result => {
       response.status(204).end()
-    }})
     })
+    .catch(error => next(error))
+})
 
-app.get('/api/persons/:id', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number} = request.body
+
   Persons.findById(request.params.id)
     .then(person => {
+      if (!person) {
+        return response.status(404).end()
+      }
 
+      person.content = name
+      person.number = number
+
+      return person.save().then((updatedPersons) => {
+        response.json(updatedPersons)
+      })
+    })
+    .catch(error => next(error))
+})
+
+app.get('/api/persons/:id', (request, response, next) => {
+  Persons.findById(request.params.id)
+    .then(person => {
       if (person) {
         response.json(person)
       } else {
@@ -67,18 +97,18 @@ app.get('/api/persons/:id', (request, response) => {
       }
     })
 
-    .catch(error => {
-      console.log(error)
-      response.status(500).end()
-    })
+    .catch(error => next(error))
 })
-
 app.get('/api/persons', (request, response) => {
   Persons.find({}).then(person => {
     response.json(person)
   })
 })
-const PORT = process.env.PORT
+app.use(unknownEndpoint)
+app.use(errorHandler)
+
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port http://localhost:${PORT}/`)
   })
