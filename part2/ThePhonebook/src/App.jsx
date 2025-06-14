@@ -53,6 +53,10 @@ const App = (props) => {
           setMessage(`'${newName}' is added the phonebook`)
           seterrormessage(null)
         })
+        .catch((error)=>{
+          setMessage(null)
+          seterrormessage(error.response.data.error)
+        })
     }
   }
 
