@@ -14,14 +14,14 @@ mongoose.connect(url)
 
 const phonebookSchema = new mongoose.Schema({
   name: String,
-  number: String, 
+  number: String,
 })
 
 const Persons = mongoose.model('Phonebook', phonebookSchema)
 
 if (process.argv.length === 3) {
   // Show all entries
-  console.log("Phonebook:")
+  console.log('Phonebook:')
   Persons.find({}).then(result => {
     result.forEach(Persons => {
       console.log(` ${Persons.name} ${Persons.number}`)
