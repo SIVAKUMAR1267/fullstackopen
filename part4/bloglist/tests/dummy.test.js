@@ -83,3 +83,15 @@ const blogs = [
     assert.strictEqual(result, 36)
   })
 })
+test('favoriteBlog', () => {
+    const result = listHelper.favoriteBlog(blogs)
+    assert.deepStrictEqual(result, {_id: "5a422b3a1b54a676234d17f9",title: "Canonical string reduction",author: "Edsger W. Dijkstra",url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",likes: 12,__v: 0})
+  })
+test('most blogs', () => {
+    const result = listHelper.mostBlogs(blogs)
+    assert.deepStrictEqual(result, { author: 'Robert C. Martin', blogs: 3 })
+  })
+test('most liked author', () => {
+    const result = listHelper.mostlikes(blogs)
+    assert.deepStrictEqual(result, { author:'Edsger W. Dijkstra', likes: 17 })
+  })
