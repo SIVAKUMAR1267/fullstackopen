@@ -7,11 +7,15 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.post('/',async (request, response) => {
+  body = request.body
+  if (!body.title || !body.author || !body.url) {
+    return response.status(400).json({ error: 'title, author and url are required' })
+  }
   const blog = new Blog({
-    title: request.body.title,
-    author: request.body.author,
-    url: request.body.url,
-    likes: request.body.likes || 0,
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes || 0,
   })
 
   try 

@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const assert = require('node:assert')
 const app = require('../app')
 const Blogs = require('../models/blogs')
+const { title } = require('node:process')
 
 
 const api = supertest(app)
@@ -79,6 +80,44 @@ test('a specific blog can be viewed', async () => {
   .expect(200)    
   .expect('Content-Type', /application\/json/)
   assert.deepStrictEqual(resultblog.body, blogToView)
+})
+
+test('a blog with a 0 likes is added with likes 0', async () => {
+  const newblogs = {
+    _id: "5a422ba71b54a676234d17fb",
+    title: "TDD harms architecture",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+    __v: 0
+  }
+  await api
+    .post('/api/blogs')
+    .send(newblogs)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const titles = response.body.map(r => r.title)
+  const likes = response.body.map(r => r.likes)
+  assert.strictEqual(response.body.length, initialblogs.length + 1)
+  assert(likes.includes(0))
+  assert(titles.includes("TDD harms architecture"))
+})
+
+test('blog without any missing attribute is not added', async () => {
+  const newblog = {
+    link: "https://reactpatterns.com/",
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newblog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, initialblogs.length)
 })
 
 after(async () => {
