@@ -1,11 +1,9 @@
-const { test, after, beforeEach} = require('node:test')
+const { test, after, beforeEach,describe} = require('node:test')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const assert = require('node:assert')
 const app = require('../app')
 const Blogs = require('../models/blogs')
-const { title } = require('node:process')
-
 
 const api = supertest(app)
 const initialblogs = [
@@ -118,6 +116,46 @@ test('blog without any missing attribute is not added', async () => {
   const response = await api.get('/api/blogs')
 
   assert.strictEqual(response.body.length, initialblogs.length)
+})
+describe('deleting a blog', () => {
+test('a blog can be deleted', async () => {
+  const blogs = await Blogs.find({})
+  const blogsAtStart = blogs.map(blog => blog.toJSON())
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const response = await api.get('/api/blogs')
+
+  const titles = response.body.map(r => r.title)
+
+  assert.strictEqual(response.body.length, initialblogs.length - 1)
+  assert(!titles.includes(blogToDelete.title))
+})
+})
+describe('updating a blog', () => {
+test('a blog can be updated', async () => {
+  const blogs = await Blogs.find({})
+  const blogsAtStart = blogs.map(blog => blog.toJSON())
+  const blogToUpdate = blogsAtStart[0]
+  const updatedblog = {
+    title: "Updated blog",
+    author: "Updated Author",
+    url: "https://updatedurl.com/",
+    likes: 10
+  }
+  const resultblog = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedblog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+  assert.strictEqual(resultblog.body.title, updatedblog.title)
+  assert.strictEqual(resultblog.body.author, updatedblog.author)
+  assert.strictEqual(resultblog.body.url, updatedblog.url)
+  assert.strictEqual(resultblog.body.likes, updatedblog.likes)
+})
 })
 
 after(async () => {
