@@ -3,7 +3,8 @@ const supertest = require('supertest')
 const mongoose = require('mongoose')
 const assert = require('node:assert')
 const app = require('../app')
-const Blogs = require('../models/blogs') 
+const User = require('../models/user')
+const Blogs = require('../models/blogs')
 const api = supertest(app)
 let token
 
@@ -37,7 +38,7 @@ beforeEach(async () => {
   }
   await api.post('/api/users').send(testUser)
 
-  
+  // Login and get token
   const loginResponse = await api
     .post('/api/login')
     .send({ username: testUser.username, password: testUser.password })
