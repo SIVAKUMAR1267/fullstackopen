@@ -1,14 +1,13 @@
-const { test, describe, beforeEach, after } = require('node:test')
+const { test, beforeEach, after } = require('node:test')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const assert = require('node:assert')
 const app = require('../app')
-const User = require('../models/user')
-const Blogs = require('../models/blogs') // <-- Add this line
+const Blogs = require('../models/blogs') 
 const api = supertest(app)
 let token
 
-const initialblogs = [ // <-- Add this array
+const initialblogs = [ 
   {
     title: "React patterns",
     author: "Michael Chan",
@@ -30,7 +29,7 @@ beforeEach(async () => {
   await Blogs.insertMany(initialblogs)
   await mongoose.connection.collection('users').deleteMany({})
 
-  // Create a test user
+  
   const testUser = {
     username: 'testuser',
     name: 'Test User',
@@ -38,7 +37,7 @@ beforeEach(async () => {
   }
   await api.post('/api/users').send(testUser)
 
-  // Login and get token
+  
   const loginResponse = await api
     .post('/api/login')
     .send({ username: testUser.username, password: testUser.password })
