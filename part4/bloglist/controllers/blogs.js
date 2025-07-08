@@ -1,37 +1,24 @@
 const blogsRouter = require('express').Router()
-const jwt = require('jsonwebtoken')
 const Blog = require('../models/blogs')
+const { userExtractor } = require('../utils/middleware')
 const User = require('../models/user')
 
-blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog
-    .find({}).populate('user', { username: 1, name: 1 })
-
-  response.json(blogs)
-})
-
-const getTokenFrom = request => {  
-  const authorization = request.get('authorization')  
-  if (authorization && authorization.startsWith('Bearer ')) {    
-    return authorization.replace('Bearer ', '')  
-  }  
-  return null
-}
-
-blogsRouter.post('/',async (request, response) => {
+blogsRouter.post('/', userExtractor, async (request, response,next) => {
   body = request.body
+ 
+  const userid = request.userid
 
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)  
-  if (!decodedToken.id) {    
+  if (!userid) {    
     return response.status(401).json({ 
       error: 'token invalid' 
-    })  
-  }  
-  const user = await User.findById(decodedToken.id)
-  if (!user || !user._id) {    
-    return response.status(401).json({ 
-      error: 'token invalid' 
-    })  
+    })
+  }
+  const user = await User.findById(userid)
+  if (!user) {
+    return response.status(401).json({
+      error: 'user not found'  
+  })
+  
   }
   if (!body.title || !body.author || !body.url) {
     return response.status(400).json({ error: 'title, author and url are required' })
@@ -57,20 +44,11 @@ blogsRouter.post('/',async (request, response) => {
   }
 })
 
-blogsRouter.get('/:id', async (request, response, next) => {
-  try {
-    const blog = await Blog.findById(request.params.id)
-    if (blog) {
-      response.json(blog)
-    } else {
-      response.status(404).end()
-    }
-  } catch (exception) {
-    next(exception)
+blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
+  const user = request.userid
+  if (!user) {
+    return response.status(401).json({ error: 'token invalid' })
   }
-})
-
-blogsRouter.delete('/:id', async (request, response, next) => {
   try {
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
@@ -78,21 +56,12 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     next(exception)
   }
 })
-blogsRouter.put('/:id', async (request, response, next) => {
-  const body = request.body
 
-  const blog = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes,
-  }
-  try {
-    const updatedblog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-    response.json(updatedblog)
-  } catch (exception) {
-    next(exception)
-  }
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog
+    .find({}).populate('user', { username: 1, name: 1 })
+
+  response.json(blogs)
 })
 
 module.exports = blogsRouter
