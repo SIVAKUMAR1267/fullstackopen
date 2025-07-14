@@ -88,7 +88,7 @@ const handleLogout = () => {
       <Errormessage errormessage={errorMessage} />
 
       {user === null ?
-  <Togglable buttonLabel='login'>
+  <Togglable buttonLabel='login' buttonlabel='cancel'>
   <LoginForm
     username={username}
     password={password}
@@ -101,17 +101,22 @@ const handleLogout = () => {
         <p>{user.name} logged-in <button onClick={handleLogout}>logout</button> </p>
         <h2>create new</h2>
 
-    <Togglable buttonLabel='New Blog' ref={blogsFormRef}>
+    <Togglable buttonLabel='New Blog' buttonlabel='cancel' ref={blogsFormRef}>
   <BlogForm blogObject={addblog}
     />
 </Togglable>
       </div>
     }
       <h2>Blogs</h2>
+
+      
+
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      
+        <Blog key={blog.id} blog={blog} username={user.name}/>
+       
       )}
-                   
+                 
               
     </div>
   )
