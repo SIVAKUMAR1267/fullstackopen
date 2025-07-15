@@ -7,6 +7,7 @@ import Notification from './components/message'
 import Togglable from './components/togglable'
 import LoginForm from './components/loginform'
 import BlogForm from './components/blogform'
+import { use } from 'react'
 
 
 
@@ -56,7 +57,26 @@ const App = () => {
         }, 5000)    
       }
     }
-  
+ 
+const handleLike = async (blog) => {
+  const updatedBlog = {
+    ...blog,
+    likes: blog.likes + 1,
+    user: blog.user.id ? blog.user.id : blog.user
+  }
+  try {
+    await blogService.update(blog.id, updatedBlog)
+    const blogs = await blogService.getAll()
+    setBlogs(blogs)
+    setMessage(`You liked '${blog.title}' by ${blog.author}`)
+    setTimeout(() => setMessage(null), 5000)
+  } catch (error) {
+    setErrorMessage(error.response?.data?.error || 'Error liking blog')
+    setTimeout(() => setErrorMessage(null), 5000)
+  }
+}
+
+
 
 const addblog = async (blogObject) => {
   try {
@@ -102,8 +122,7 @@ const handleLogout = () => {
         <h2>create new</h2>
 
     <Togglable buttonLabel='New Blog' buttonlabel='cancel' ref={blogsFormRef}>
-  <BlogForm blogObject={addblog}
-    />
+  <BlogForm blogObject={addblog} />
 </Togglable>
       </div>
     }
@@ -113,7 +132,7 @@ const handleLogout = () => {
 
       {blogs.map(blog =>
       
-        <Blog key={blog.id} blog={blog} username={user.name}/>
+        <Blog key={blog.id} blog={blog}  handleLike={handleLike}/>
        
       )}
                  

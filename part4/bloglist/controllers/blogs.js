@@ -63,5 +63,31 @@ blogsRouter.get('/', async (request, response) => {
 
   response.json(blogs)
 })
+blogsRouter.put('/:id',async (request, response, next)=>
+{
+  const Blogfind = await Blog.findById(request.params.id)
+  if (!Blogfind) {
+    return response.status(404).json({ error: 'blog not found' })
+  }
+  const body = request.body
+  const updatedBlog = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes
+  }
+  if (!body.user) {
+  return response.status(400).json({ error: 'user field is required' })
+}
+  try {
+    await Blog.findByIdAndUpdate(request.params.id, updatedBlog, { new: true })
+    response.json(updatedBlog)
+  } 
+  catch (exception) {
+    next(exception)
+  }
+
+  
+})
 
 module.exports = blogsRouter
