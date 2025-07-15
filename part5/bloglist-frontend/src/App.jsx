@@ -20,12 +20,15 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [message, setMessage] = useState(null)
 
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+  useEffect(() => { async function getblogs() {    
+      const blogs = await blogService.getAll()    
+      blogs.sort((a, b) => b.likes - a.likes)    
+      setBlogs(blogs)
+    }
+    getblogs()
   }, [])
-
+    
+  
     useEffect(() => {    
       const loggedUserJSON = window.localStorage.getItem('loggedblogappUser')    
       if (loggedUserJSON) {      
@@ -67,6 +70,7 @@ const handleLike = async (blog) => {
   try {
     await blogService.update(blog.id, updatedBlog)
     const blogs = await blogService.getAll()
+    blogs.sort((a, b) => b.likes - a.likes)
     setBlogs(blogs)
     setMessage(`You liked '${blog.title}' by ${blog.author}`)
     setTimeout(() => setMessage(null), 5000)
