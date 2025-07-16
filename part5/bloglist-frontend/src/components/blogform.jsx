@@ -25,7 +25,7 @@ const handleurlChange = (event) => {
     setnewUrl(event.target.value)
 }
 return(
-    <form onSubmit={addblog}>
+    <form className='blogform' onSubmit={addblog}>
       <div>
         Title:<input
           type="text"
@@ -50,7 +50,7 @@ return(
           onChange={handleurlChange}
         />
       </div>
-      <button type="submit">create</button>
+      <button className='button' type="submit">create</button>
     </form>
   )}
   export default blogForm

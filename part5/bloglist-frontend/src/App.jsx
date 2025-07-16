@@ -80,13 +80,30 @@ const handleLike = async (blog) => {
   }
 }
 
+const handleDelete = async (id) => {
+  if (window.confirm('Are you sure you want to delete this blog?')) {
+    try {
+    await blogService.deleteBlog(id)
+    const blog = await blogService.getAll()
+    blog.sort((a, b) => b.likes - a.likes)
+    setBlogs(blog)
+      setMessage('Blog deleted successfully')
+      setTimeout(() => setMessage(null), 5000)
+    } catch (error) {
+      setErrorMessage(error.response?.data?.error || 'Error deleting blog')
+      setTimeout(() => setErrorMessage(null), 5000)
+    }
+  }
+}
 
 
 const addblog = async (blogObject) => {
   try {
     blogsFormRef.current.toggleVisibility()
-    const newblog = await blogService.create(blogObject)
-    setBlogs(blogs.concat(newblog))
+    await blogService.create(blogObject)
+    const updatedBlogs = await blogService.getAll()
+    updatedBlogs.sort((a, b) => b.likes - a.likes)
+    setBlogs(updatedBlogs)
     setMessage(`'${blogObject.title}' by ${blogObject.author} is added to the BlogList`)
     setTimeout(() => {
       setMessage(null)
@@ -122,7 +139,7 @@ const handleLogout = () => {
   />
 </Togglable> :
       <div>
-        <p>{user.name} logged-in <button onClick={handleLogout}>logout</button> </p>
+        <p>{user.name} logged-in <button className='button' onClick={handleLogout}>logout</button> </p>
         <h2>create new</h2>
 
     <Togglable buttonLabel='New Blog' buttonlabel='cancel' ref={blogsFormRef}>
@@ -136,7 +153,7 @@ const handleLogout = () => {
 
       {blogs.map(blog =>
       
-        <Blog key={blog.id} blog={blog}  handleLike={handleLike}/>
+        <Blog key={blog.id} blog={blog}  handleLike={handleLike} handleDelete={handleDelete} username={user}/>
        
       )}
                  
