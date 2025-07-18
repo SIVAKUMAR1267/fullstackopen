@@ -26,33 +26,38 @@ const BlogForm = ({ blogObject }) => {
     setnewUrl(event.target.value)
   }
   return(
-    <form className='blogform' onSubmit={addblog}>
-      <div>
-        Title:<input
-          type="text"
-          value={newtitle}
-          name="Title"
-          onChange={handletitleChange}
-        />
-      </div>
-      <div>
-        Author:<input
-          type="text"
-          value={newauthor}
-          name="Author"
-          onChange={handleauthorChange}
-        />
-      </div>
-      <div>
-        Url:<input
-          type="text"
-          value={newurl}
-          name="Url"
-          onChange={handleurlChange}
-        />
-      </div>
-      <button className='button' type="submit">create</button>
-    </form>
+    <div className='formdiv'>
+      <form className='blogform' onSubmit={addblog}>
+        <div>
+          Title:<input
+            type="text"
+            value={newtitle}
+            name="Title"
+            onChange={handletitleChange}
+            placeholder='title'
+          />
+        </div>
+        <div>
+          Author:<input
+            type="text"
+            value={newauthor}
+            name="Author"
+            onChange={handleauthorChange}
+            placeholder='author'
+          />
+        </div>
+        <div>
+          Url:<input
+            type="text"
+            value={newurl}
+            name="Url"
+            onChange={handleurlChange}
+            placeholder='url'
+          />
+        </div>
+        <button className='button' type="submit">create</button>
+      </form>
+    </div>
   )}
 BlogForm.propTypes = {
   blogObject: propTypes.func.isRequired

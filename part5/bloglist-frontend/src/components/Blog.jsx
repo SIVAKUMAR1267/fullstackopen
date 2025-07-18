@@ -7,14 +7,15 @@ const Blog = ({ blog,username , handleLike, handleDelete }) => {
   const showWhenVisible = { display: blogVisible ? '' : 'none' }
   return(
     <div className='blogStyle'>
-      <div>
+      <div className='blog'>
         {blog.title} - {blog.author}
         <button className='view' style={hideWhenVisible} onClick={() => setblogVisible(true)}>view</button>
         <button className='view' style={showWhenVisible} onClick={() => setblogVisible(false)}>hide</button>
       </div>
       <div style={showWhenVisible}>
         <div>
-          Likes {blog.likes}<button className='like' onClick={() => handleLike(blog)}>Like</button>
+          Likes {blog.likes}
+          <button className='like' onClick={() => handleLike(blog)}>Like</button>
         </div>
         <div>
           <a href={blog.url} target="_blank" rel="noopener noreferrer">
