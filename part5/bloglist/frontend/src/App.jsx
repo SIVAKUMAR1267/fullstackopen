@@ -127,7 +127,7 @@ const App = () => {
       <Errormessage errormessage={errorMessage} />
 
       {user === null ?
-        <Togglable buttonLabel='login' buttonlabel='cancel'>
+        <Togglable buttonLabel='login' buttonlabel='cancel' defaultVisible={true}>
           <LoginForm
             username={username}
             password={password}
