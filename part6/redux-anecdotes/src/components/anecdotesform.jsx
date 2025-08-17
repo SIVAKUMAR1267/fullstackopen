@@ -9,7 +9,6 @@ const AnecdotesForm = () => {
         const content = event.target.anecdote.value
         event.target.anecdote.value = ''
         dispatch(Createnecdote(content))
-        anecdotes.sort((a,b) => b.votes - a.votes)
       }
     return(
         <div>
