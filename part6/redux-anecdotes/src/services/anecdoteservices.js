@@ -10,7 +10,7 @@ const create = async (content) => {
   const response = await axios.post(baseUrl, { content, votes: 0 })
   return response.data
 }
-const update = async(content) => {
+const update = async(id,content) => {
   const response = await axios.put(`${baseUrl}/${id}`, content)
   return response.data
 }
