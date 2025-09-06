@@ -1,10 +1,10 @@
-import { useState } from "react";
-import propTypes from "prop-types";
+import { useState } from 'react'
+import propTypes from 'prop-types'
 
 const Blog = ({ blog, username, handleLike, handleDelete }) => {
-  const [blogVisible, setblogVisible] = useState(false);
-  const hideWhenVisible = { display: blogVisible ? "none" : "" };
-  const showWhenVisible = { display: blogVisible ? "" : "none" };
+  const [blogVisible, setblogVisible] = useState(false)
+  const hideWhenVisible = { display: blogVisible ? 'none' : '' }
+  const showWhenVisible = { display: blogVisible ? '' : 'none' }
   return (
     <div className="blogStyle">
       <div className="blog">
@@ -46,13 +46,13 @@ const Blog = ({ blog, username, handleLike, handleDelete }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 Blog.propTypes = {
   blog: propTypes.object.isRequired,
   username: propTypes.object,
   handleLike: propTypes.func.isRequired,
   handleDelete: propTypes.func.isRequired,
-};
+}
 
-export default Blog;
+export default Blog

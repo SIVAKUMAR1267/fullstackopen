@@ -1,127 +1,135 @@
-import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-import Errormessage from "./components/errormessage";
-import Notification from "./components/message";
-import Togglable from "./components/togglable";
-import LoginForm from "./components/loginform";
-import BlogForm from "./components/blogform";
+import { useState, useEffect, useRef } from 'react'
+import Blog from './components/Blog'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import Notification from './components/message'
+import Togglable from './components/togglable'
+import LoginForm from './components/loginform'
+import BlogForm from './components/blogform'
+import { setNotificationWithTimeout } from './reducers/notificationreducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [message, setMessage] = useState(null);
-
+  const [blogs, setBlogs] = useState([])
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+  const dispatch = useDispatch()
   useEffect(() => {
     async function getblogs() {
-      const blogs = await blogService.getAll();
-      blogs.sort((a, b) => b.likes - a.likes);
-      setBlogs(blogs);
+      const blogs = await blogService.getAll()
+      blogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(blogs)
     }
-    getblogs();
-  }, []);
+    getblogs()
+  }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedblogappUser");
+    const loggedUserJSON = window.localStorage.getItem('loggedblogappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
     }
-  }, []);
+  }, [])
 
-  const blogsFormRef = useRef();
+  const blogsFormRef = useRef()
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const user = await loginService.login({
         username,
         password,
-      });
-      window.localStorage.setItem("loggedblogappUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername("");
-      setPassword("");
+      })
+      window.localStorage.setItem('loggedblogappUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
     } catch (exception) {
-      setErrorMessage("wrong username or password");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(setNotificationWithTimeout('wrong username or password', 5))
     }
-  };
+  }
 
   const handleLike = async (blog) => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
       user: blog.user.id ? blog.user.id : blog.user,
-    };
-    try {
-      await blogService.update(blog.id, updatedBlog);
-      const blogs = await blogService.getAll();
-      blogs.sort((a, b) => b.likes - a.likes);
-      setBlogs(blogs);
-      setMessage(`You liked '${blog.title}' by ${blog.author}`);
-      setTimeout(() => setMessage(null), 5000);
-    } catch (error) {
-      setErrorMessage(error.response?.data?.error || "Error liking blog");
-      setTimeout(() => setErrorMessage(null), 5000);
     }
-  };
+    try {
+      await blogService.update(blog.id, updatedBlog)
+      const blogs = await blogService.getAll()
+      blogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(blogs)
+      dispatch(
+        setNotificationWithTimeout(
+          `You liked '${blog.title}' by ${blog.author}`,
+          5
+        )
+      )
+    } catch (error) {
+      dispatch(
+        setNotificationWithTimeout(
+          error.response?.data?.error || 'Error liking blog',
+          5
+        )
+      )
+    }
+  }
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this blog?")) {
+    if (window.confirm('Are you sure you want to delete this blog?')) {
       try {
-        await blogService.deleteBlog(id);
-        const blog = await blogService.getAll();
-        blog.sort((a, b) => b.likes - a.likes);
-        setBlogs(blog);
-        setMessage("Blog deleted successfully");
-        setTimeout(() => setMessage(null), 5000);
+        await blogService.deleteBlog(id)
+        const blog = await blogService.getAll()
+        blog.sort((a, b) => b.likes - a.likes)
+        setBlogs(blog)
+        dispatch(setNotificationWithTimeout('Blog deleted successfully', 5))
       } catch (error) {
-        setErrorMessage(error.response?.data?.error || "Error deleting blog");
-        setTimeout(() => setErrorMessage(null), 5000);
+        dispatch(
+          setNotificationWithTimeout(
+            error.response?.data?.error || 'Error deleting blog',
+            5
+          )
+        )
       }
     }
-  };
+  }
 
   const addblog = async (blogObject) => {
     try {
-      blogsFormRef.current.toggleVisibility();
-      await blogService.create(blogObject);
-      const updatedBlogs = await blogService.getAll();
-      updatedBlogs.sort((a, b) => b.likes - a.likes);
-      setBlogs(updatedBlogs);
-      setMessage(
-        `'${blogObject.title}' by ${blogObject.author} is added to the BlogList`,
-      );
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      blogsFormRef.current.toggleVisibility()
+      await blogService.create(blogObject)
+      const updatedBlogs = await blogService.getAll()
+      updatedBlogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(updatedBlogs)
+      dispatch(
+        setNotificationWithTimeout(
+          `'${blogObject.title}' by ${blogObject.author} is added to the BlogList`,
+          5
+        )
+      )
     } catch (error) {
-      setMessage(null);
-      setErrorMessage(error.response?.data?.error || "Error adding blog");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(setNotificationWithTimeout(null, 0))
+      dispatch(
+        setNotificationWithTimeout(
+          error.response?.data?.error || 'Error adding blog',
+          5
+        )
+      )
     }
-  };
+  }
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedblogappUser");
-    setUser(null);
-    blogService.setToken(null);
-  };
+    window.localStorage.removeItem('loggedblogappUser')
+    setUser(null)
+    blogService.setToken(null)
+  }
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification message={message} />
-      <Errormessage errormessage={errorMessage} />
+      <Notification />
 
       {user === null ? (
         <Togglable
@@ -140,10 +148,10 @@ const App = () => {
       ) : (
         <div>
           <p>
-            {user.name} logged-in{" "}
+            {user.name} logged-in{' '}
             <button className="button" onClick={handleLogout}>
               logout
-            </button>{" "}
+            </button>{' '}
           </p>
           <h2>create new</h2>
 
@@ -167,7 +175,7 @@ const App = () => {
         />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

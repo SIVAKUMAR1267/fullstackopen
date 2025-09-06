@@ -1,30 +1,30 @@
-import { useState } from "react";
-import propTypes from "prop-types";
+import { useState } from 'react'
+import propTypes from 'prop-types'
 
 const BlogForm = ({ blogObject }) => {
-  const [newtitle, setnewTitle] = useState("");
-  const [newauthor, setnewAuthor] = useState("");
-  const [newurl, setnewUrl] = useState("");
+  const [newtitle, setnewTitle] = useState('')
+  const [newauthor, setnewAuthor] = useState('')
+  const [newurl, setnewUrl] = useState('')
   const addblog = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     blogObject({
       title: newtitle,
       author: newauthor,
       url: newurl,
-    });
-    setnewTitle("");
-    setnewAuthor("");
-    setnewUrl("");
-  };
+    })
+    setnewTitle('')
+    setnewAuthor('')
+    setnewUrl('')
+  }
   const handletitleChange = (event) => {
-    setnewTitle(event.target.value);
-  };
+    setnewTitle(event.target.value)
+  }
   const handleauthorChange = (event) => {
-    setnewAuthor(event.target.value);
-  };
+    setnewAuthor(event.target.value)
+  }
   const handleurlChange = (event) => {
-    setnewUrl(event.target.value);
-  };
+    setnewUrl(event.target.value)
+  }
   return (
     <div className="formdiv">
       <form className="blogform" onSubmit={addblog}>
@@ -63,10 +63,10 @@ const BlogForm = ({ blogObject }) => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 BlogForm.propTypes = {
   blogObject: propTypes.func.isRequired,
-};
+}
 
-export default BlogForm;
+export default BlogForm
