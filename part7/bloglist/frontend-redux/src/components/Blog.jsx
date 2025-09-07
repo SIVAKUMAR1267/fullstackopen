@@ -1,10 +1,28 @@
 import { useState } from 'react'
-import propTypes from 'prop-types'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { likeblog, deleteblog } from '../reducers/blogsreducers'
 
-const Blog = ({ blog, username, handleLike, handleDelete }) => {
+const Blog = ({ blog }) => {
+  const username = useSelector((state) => state.users)
   const [blogVisible, setblogVisible] = useState(false)
   const hideWhenVisible = { display: blogVisible ? 'none' : '' }
   const showWhenVisible = { display: blogVisible ? '' : 'none' }
+  const dispatch = useDispatch()
+
+  const handleLike = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    }
+    dispatch(likeblog(blog.id, updatedBlog))
+  }
+  const handledelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this blog?')) {
+      dispatch(deleteblog(id))
+    }
+  }
+
   return (
     <div className="blogStyle">
       <div className="blog">
@@ -39,7 +57,7 @@ const Blog = ({ blog, username, handleLike, handleDelete }) => {
         {blog.user.name}
         <div>
           {username?.username === blog.user.username ? (
-            <button className="delete" onClick={() => handleDelete(blog.id)}>
+            <button className="delete" onClick={() => handledelete(blog.id)}>
               Delete
             </button>
           ) : null}
@@ -47,12 +65,6 @@ const Blog = ({ blog, username, handleLike, handleDelete }) => {
       </div>
     </div>
   )
-}
-Blog.propTypes = {
-  blog: propTypes.object.isRequired,
-  username: propTypes.object,
-  handleLike: propTypes.func.isRequired,
-  handleDelete: propTypes.func.isRequired,
 }
 
 export default Blog
