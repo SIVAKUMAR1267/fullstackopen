@@ -22,6 +22,6 @@ test('<Blogform /> updates parent state and calls onSubmit', async () => {
   expect(blogObject).toHaveBeenCalledWith({
     title: 'First class tests',
     author: 'Robert C. Martin',
-    url: 'http://example.com'
+    url: 'http://example.com',
   })
 })
