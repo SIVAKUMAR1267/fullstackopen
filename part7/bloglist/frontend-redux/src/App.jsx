@@ -21,7 +21,7 @@ const App = () => {
   const blogs = useSelector((state) => state.blogs)
   const match = useMatch('/blogs/:id')
   const matchuser = useMatch('/users/:id')
-  console.log(blogusers)
+
 
   useEffect(() => {
     dispatch(initialblogs())

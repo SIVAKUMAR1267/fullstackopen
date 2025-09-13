@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { createblog } from '../reducers/blogsreducers'
 
 const BlogForm = (user) => {
   const dispatch = useDispatch()
+  const Navigate = useNavigate()
   const addblog = (event) => {
     event.preventDefault()
     dispatch(
@@ -17,6 +18,7 @@ const BlogForm = (user) => {
     event.target.Title.value = ''
     event.target.Author.value = ''
     event.target.Url.value = ''
+    Navigate('/')
   }
 
   return (

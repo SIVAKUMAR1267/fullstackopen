@@ -95,6 +95,28 @@ export const deleteblog = (id) => {
     }
   }
 }
+export const addcomment = (id, blog) => {
+  return async (dispatch) => {
+    try {
+      const updatedblog = await blogs.update(id, blog)
+      dispatch(blogslice.actions.updateblog(updatedblog))
+      dispatch(initialblogs())
+      dispatch(initializeusers())
+      dispatch(
+        setNotificationWithTimeout(
+          `You Commented on '${blog.title}' by ${blog.author}`,
+          5
+        )
+      )
+    } catch (error) {
+      setNotificationWithTimeout(
+        error.response?.data?.error || 'Error Commenting on blog',
+        5
+      )
+    }
+  }
+}
+
 export const { appendblog, setblogs } = blogslice.actions
 
 export default blogslice.reducer
