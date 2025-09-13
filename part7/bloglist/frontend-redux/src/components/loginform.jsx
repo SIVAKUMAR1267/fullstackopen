@@ -1,9 +1,10 @@
 import { loginuser } from '../reducers/userreducer'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
-
+  const navigate = useNavigate()
   const handleSubmit = (event) => {
     event.preventDefault()
     const username = event.target.Username.value
@@ -11,6 +12,7 @@ const LoginForm = () => {
     dispatch(loginuser(username, password))
     event.target.Username.value = ''
     event.target.Password.value = ''
+    navigate('/')
   }
 
   return (
@@ -33,7 +35,5 @@ const LoginForm = () => {
     </div>
   )
 }
-
-
 
 export default LoginForm

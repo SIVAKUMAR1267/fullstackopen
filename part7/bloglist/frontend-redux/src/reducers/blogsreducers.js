@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import blogs from '../services/blogs'
 import { setNotificationWithTimeout } from './notificationreducer'
+import { initializeusers } from './usersreducers'
+
 const blogslice = createSlice({
   name: 'blogs',
   initialState: [],
@@ -37,7 +39,13 @@ export const createblog = (content) => {
       const newblog = await blogs.create(content)
       dispatch(appendblog(newblog))
       dispatch(initialblogs())
-      dispatch(setNotificationWithTimeout(`A new blog '${newblog.title}' by ${newblog.author} added`,5))
+      dispatch(
+        setNotificationWithTimeout(
+          `A new blog '${newblog.title}' by ${newblog.author} added`,
+          5
+        )
+      )
+      dispatch(initializeusers())
     } catch (error) {
       dispatch(
         setNotificationWithTimeout(
@@ -54,6 +62,7 @@ export const likeblog = (id, blog) => {
       const updatedblog = await blogs.update(id, blog)
       dispatch(blogslice.actions.updateblog(updatedblog))
       dispatch(initialblogs())
+      dispatch(initializeusers())
       dispatch(
         setNotificationWithTimeout(
           `You liked '${blog.title}' by ${blog.author}`,
@@ -75,6 +84,7 @@ export const deleteblog = (id) => {
       dispatch(blogslice.actions.removeblog(id))
       dispatch(initialblogs())
       dispatch(setNotificationWithTimeout('Blog deleted successfully', 5))
+      dispatch(initializeusers())
     } catch (error) {
       dispatch(
         setNotificationWithTimeout(

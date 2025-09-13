@@ -1,13 +1,9 @@
-import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { likeblog, deleteblog } from '../reducers/blogsreducers'
 
 const Blog = ({ blog }) => {
   const username = useSelector((state) => state.users)
-  const [blogVisible, setblogVisible] = useState(false)
-  const hideWhenVisible = { display: blogVisible ? 'none' : '' }
-  const showWhenVisible = { display: blogVisible ? '' : 'none' }
   const dispatch = useDispatch()
 
   const handleLike = async (blog) => {
@@ -26,35 +22,27 @@ const Blog = ({ blog }) => {
   return (
     <div className="blogStyle">
       <div className="blog">
-        {blog.title} - {blog.author}
-        <button
-          className="view"
-          style={hideWhenVisible}
-          onClick={() => setblogVisible(true)}
-        >
-          view
-        </button>
-        <button
-          className="view"
-          style={showWhenVisible}
-          onClick={() => setblogVisible(false)}
-        >
-          hide
-        </button>
+        <h3>
+          {blog.title} - {blog.author}
+        </h3>
       </div>
-      <div style={showWhenVisible}>
+      <div>
         <div>
-          Likes {blog.likes}
-          <button className="like" onClick={() => handleLike(blog)}>
-            Like
-          </button>
+          <h3>
+            Likes {blog.likes}{' '}
+            <button className="like" onClick={() => handleLike(blog)}>
+              Like
+            </button>
+          </h3>
         </div>
         <div>
-          <a href={blog.url} target="_blank" rel="noopener noreferrer">
-            {blog.url}
-          </a>
+          <h3>
+            <a href={blog.url} target="_blank" rel="noopener noreferrer">
+              {blog.url}
+            </a>
+          </h3>
         </div>
-        {blog.user.name}
+        <h3>{blog.user.name}</h3>
         <div>
           {username?.username === blog.user.username ? (
             <button className="delete" onClick={() => handledelete(blog.id)}>
