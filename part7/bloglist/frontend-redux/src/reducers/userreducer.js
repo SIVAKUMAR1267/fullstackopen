@@ -27,7 +27,7 @@ export const loginuser = (username, password) => {
       blogs.setToken(user.token)
       window.localStorage.setItem('loggedblogappUser', JSON.stringify(user))
     } catch (exception) {
-      dispatch(setNotificationWithTimeout('wrong username or password', 5))
+      dispatch(setNotificationWithTimeout('wrong username or password', 5,'error'))
     }
   }
 }

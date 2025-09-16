@@ -1,7 +1,10 @@
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { likeblog, deleteblog,addcomment } from '../reducers/blogsreducers'
+import { likeblog, deleteblog, addcomment } from '../reducers/blogsreducers'
 import { useNavigate } from 'react-router-dom'
+import { Box, Button, List, ListItem, ListItemIcon, TextField, Typography } from '@mui/material'
+import CommentIcon from '@mui/icons-material/Comment'
+
 const Blog = ({ blog }) => {
   const username = useSelector((state) => state.users)
   const dispatch = useDispatch()
@@ -19,62 +22,59 @@ const Blog = ({ blog }) => {
       Navigate('/')
     }
   }
-  const comments = blog.comments
-  const addcomments = async (event,blog) => {
+  const addcomments = async (event, blog) => {
     event.preventDefault()
     const comments = event.target.comments.value
     event.target.comments.value = ''
     const updatedBlog = {
       ...blog,
-      comments:[...blog.comments, comments],
+      comments: [...blog.comments, comments],
     }
     dispatch(addcomment(blog.id, updatedBlog))
   }
 
   return (
-    <div className="blogStyle">
-      <div className="blog">
-        <h3>
-          {blog.title} - {blog.author}
-        </h3>
-      </div>
-      <div>
-        <div>
-          <h3>
-            Likes {blog.likes}{' '}
-            <button className="like" onClick={() => handleLike(blog)}>
-              Like
-            </button>
-          </h3>
-        </div>
-        <div>
-          <h3>
-            <a href={blog.url} target="_blank" rel="noopener noreferrer">
-              {blog.url}
-            </a>
-          </h3>
-        </div>
-        <h3>{blog.user.name}</h3>
-        <div>
-          {username?.username === blog.user.username ? (
-            <button className="delete" onClick={() => handledelete(blog.id)}>
+    <Box display={'flex'} flexDirection={'column'} marginY={2}>
+      <Typography variant="h4">{blog.title}</Typography>
+      <Box marginY={2}>
+        <Typography fontSize={16}>
+          <a href={blog.url}>{blog.url}</a>
+        </Typography>
+        <Box display={'flex'} gap={1} alignItems={'center'}>
+          <Typography fontSize={16}>
+            {blog.likes} likes
+          </Typography>
+          <Button size="small" variant="contained" onClick={handleLike}>like</Button>
+        </Box>
+        <Typography fontSize={16}>
+          added by {blog.author}
+        </Typography>
+        {username?.username === blog.user.username ? (
+          <Button size="small" variant="contained" onClick={() => handledelete(blog.id)}>
               Delete
-            </button>
-          ) : null}
-        </div>
-      </div>
-      <h3>Comments</h3>
-      <form onSubmit={(event) => addcomments(event, blog)} >
-        <input type='text' name='comments' placeholder='comments' /> <button className='button' type='submit'>Add comments</button>
+          </Button>
+        ) : null}
+      </Box>
+      <form onSubmit={(event) => addcomments(event, blog)}>
+        <Box display={'flex'} alignContent={'center'} gap={2}>
+          <TextField
+            label="comment..."
+            variant="outlined"
+            size="small"
+            name="comments"
+            type="text"
+          />
+          <Button size="small" variant="contained" type="submit">add comment</Button>
+        </Box>
       </form>
-      {blog.comments.map ((b) => (
-        <div key={b}>
-          <ul>
-            <li>{b}</li>
-          </ul>
-        </div>
-      ))}
-    </div>
+      <List>
+        {blog.comments.map((c) => (
+          <ListItem key={c}>
+            <ListItemIcon><CommentIcon/></ListItemIcon> {c}
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   )
 }
 

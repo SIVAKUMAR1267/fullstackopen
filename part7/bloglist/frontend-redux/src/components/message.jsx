@@ -1,4 +1,7 @@
 import { useSelector } from 'react-redux'
+import Alert from '@mui/material/Alert'
+import CheckIcon from '@mui/icons-material/Check'
+
 
 const Notification = () => {
   const notification = useSelector((state) => state.notification)
@@ -10,6 +13,8 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1,
   }
-  return <div style={style}>{notification}</div>
+  return <Alert severity={notification.severity}>
+    {notification.message}
+  </Alert>
 }
 export default Notification
