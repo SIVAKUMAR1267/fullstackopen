@@ -42,7 +42,8 @@ export const createblog = (content) => {
       dispatch(
         setNotificationWithTimeout(
           `A new blog '${newblog.title}' by ${newblog.author} added`,
-          5,'success'
+          5,
+          'success'
         )
       )
       dispatch(initializeusers())
@@ -50,7 +51,8 @@ export const createblog = (content) => {
       dispatch(
         setNotificationWithTimeout(
           error.response?.data?.error || 'Error creating blog',
-          5,'error'
+          5,
+          'error'
         )
       )
     }
@@ -66,13 +68,15 @@ export const likeblog = (id, blog) => {
       dispatch(
         setNotificationWithTimeout(
           `You liked '${blog.title}' by ${blog.author}`,
-          5,'success'
+          5,
+          'success'
         )
       )
     } catch (error) {
       setNotificationWithTimeout(
         error.response?.data?.error || 'Error liking blog',
-        5,'error'
+        5,
+        'error'
       )
     }
   }
@@ -83,13 +87,16 @@ export const deleteblog = (id) => {
       await blogs.deleteBlog(id)
       dispatch(blogslice.actions.removeblog(id))
       dispatch(initialblogs())
-      dispatch(setNotificationWithTimeout('Blog deleted successfully', 5, 'success'))
+      dispatch(
+        setNotificationWithTimeout('Blog deleted successfully', 5, 'success')
+      )
       dispatch(initializeusers())
     } catch (error) {
       dispatch(
         setNotificationWithTimeout(
           error.response?.data?.error || 'Error deleting blog',
-          5, 'error'
+          5,
+          'error'
         )
       )
     }
@@ -105,13 +112,15 @@ export const addcomment = (id, blog) => {
       dispatch(
         setNotificationWithTimeout(
           `You Commented on '${blog.title}' by ${blog.author}`,
-          5,'success'
+          5,
+          'success'
         )
       )
     } catch (error) {
       setNotificationWithTimeout(
         error.response?.data?.error || 'Error Commenting on blog',
-        5,'error'
+        5,
+        'error'
       )
     }
   }

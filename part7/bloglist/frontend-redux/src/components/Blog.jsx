@@ -2,7 +2,15 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { likeblog, deleteblog, addcomment } from '../reducers/blogsreducers'
 import { useNavigate } from 'react-router-dom'
-import { Box, Button, List, ListItem, ListItemIcon, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  TextField,
+  Typography,
+} from '@mui/material'
 import CommentIcon from '@mui/icons-material/Comment'
 
 const Blog = ({ blog }) => {
@@ -41,17 +49,23 @@ const Blog = ({ blog }) => {
           <a href={blog.url}>{blog.url}</a>
         </Typography>
         <Box display={'flex'} gap={1} alignItems={'center'}>
-          <Typography fontSize={16}>
-            {blog.likes} likes
-          </Typography>
-          <Button size="small" variant="contained" onClick={handleLike}>like</Button>
+          <Typography fontSize={16}>{blog.likes} likes</Typography>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={() => handleLike(blog)}
+          >
+            like
+          </Button>
         </Box>
-        <Typography fontSize={16}>
-          added by {blog.author}
-        </Typography>
+        <Typography fontSize={16}>added by {blog.author}</Typography>
         {username?.username === blog.user.username ? (
-          <Button size="small" variant="contained" onClick={() => handledelete(blog.id)}>
-              Delete
+          <Button
+            size="small"
+            variant="contained"
+            onClick={() => handledelete(blog.id)}
+          >
+            Delete
           </Button>
         ) : null}
       </Box>
@@ -64,13 +78,18 @@ const Blog = ({ blog }) => {
             name="comments"
             type="text"
           />
-          <Button size="small" variant="contained" type="submit">add comment</Button>
+          <Button size="small" variant="contained" type="submit">
+            add comment
+          </Button>
         </Box>
       </form>
       <List>
         {blog.comments.map((c) => (
           <ListItem key={c}>
-            <ListItemIcon><CommentIcon/></ListItemIcon> {c}
+            <ListItemIcon>
+              <CommentIcon />
+            </ListItemIcon>{' '}
+            {c}
           </ListItem>
         ))}
       </List>

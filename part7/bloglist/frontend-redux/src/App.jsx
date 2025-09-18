@@ -17,15 +17,12 @@ import { Container, Button, AppBar, Toolbar } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import Divider from '@mui/material/Divider'
-import Logout from '@mui/icons-material/Logout'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import MenuIcon from '@mui/icons-material/Menu'
-import AdbIcon from '@mui/icons-material/Adb'
+import Signup from './components/sigup'
 
 const theme = createTheme({
   palette: {
@@ -270,7 +267,8 @@ const App = () => {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/" element={<BlogList />} />
             <Route path="/blogs/:id" element={<Blog blog={blog} />} />
-            <Route path="create" element={<BlogForm />} />
+            <Route path="/create" element={<BlogForm />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </div>
       </Container>

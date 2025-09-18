@@ -11,10 +11,10 @@ const Bloguser = ({ user }) => {
       <Typography variant="h4">{user.name}</Typography>
       <Typography variant="h6">Added blogs</Typography>
       <List>
-        {user.blogs.map(b => (
+        {user.blogs.map((b) => (
           <ListItem key={b.id}>
             <ListItemIcon>
-              <FeedIcon/>
+              <FeedIcon />
             </ListItemIcon>
             <Link to={`/blogs/${b.id}`}>{b.title}</Link>
           </ListItem>

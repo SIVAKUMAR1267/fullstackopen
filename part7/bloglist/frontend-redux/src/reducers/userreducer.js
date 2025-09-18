@@ -18,17 +18,13 @@ const userslice = createSlice({
 
 export const loginuser = (username, password) => {
   return async (dispatch) => {
-    try {
-      const user = await login.login({
-        username,
-        password,
-      })
-      dispatch(setuser(user))
-      blogs.setToken(user.token)
-      window.localStorage.setItem('loggedblogappUser', JSON.stringify(user))
-    } catch (exception) {
-      dispatch(setNotificationWithTimeout('wrong username or password', 5,'error'))
-    }
+    const user = await login.login({
+      username,
+      password,
+    })
+    dispatch(setuser(user))
+    blogs.setToken(user.token)
+    window.localStorage.setItem('loggedblogappUser', JSON.stringify(user))
   }
 }
 
