@@ -32,6 +32,10 @@ This course is all about building a solid foundation, and I'm proud of the skill
 * **Part 6: Redux Power!** - State management was a game-changer. I used **Redux Toolkit** to handle complex application state in a predictable way.
 * **Part 7: Routing and Bundling** - I made my single-page applications feel like multi-page websites using **React Router**. I also learned the magic of **Webpack** for bundling and optimizing my code.
 
+### Full Stack Open: core course
+
+![Full Stack Open core course Certificate](./img/certificate-fullstack.png)
+
 ### **What's Next?**
 
 The journey continues! I'm ready to take on the remaining parts, including topics like GraphQL and TypeScript. Stay tuned for more updates as I keep building!
